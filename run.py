@@ -4,6 +4,7 @@ from pygame.locals import *
 from constants import *
 from nodes import NodeGroup
 from pacman import Pacman
+from ghost import Ghost
 
 from pellets import PelletGroup
 
@@ -11,9 +12,7 @@ from pellets import PelletGroup
 class GameController(object):
     def __init__(self):
         pygame.init()
-
         self.clock = pygame.time.Clock()
-
         self.screen = pygame.display.set_mode(SCREENSIZE, 0, 32)
         self.background = None
 
@@ -27,10 +26,12 @@ class GameController(object):
         self.nodes.setPortalPair((0, 17), (27, 17))
         self.pacman = Pacman(self.nodes.getStartTempNode())
         self.pellets = PelletGroup("maze1.txt")
+        self.ghost = Ghost(self.nodes.getStartTempNode())
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
         self.pacman.update(dt)
+        self.ghost.update(dt)
         self.pellets.update(dt)
         self.checkPelletEvents()
 
@@ -53,6 +54,7 @@ class GameController(object):
         self.nodes.render(self.screen)
         self.pellets.render(self.screen)
         self.pacman.render(self.screen)
+        self.ghost.render(self.screen)
 
         pygame.display.update()
 
